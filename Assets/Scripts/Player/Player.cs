@@ -5,12 +5,6 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
-    [Header("Movement")]
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private SpriteRenderer spriteRenderer;
-    private Rigidbody2D rb;
-    private Vector2 movement;
-    
 
     [Header("Attack Cone")]
     [SerializeField] private GameObject coneObject;
@@ -27,41 +21,16 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         coneObject.SetActive(false);
     }
 
     private void Update()
     {
-        HandleMovementInput();
-        HandleSpriteFlip();
         IncrementAttackTimer();
         ManageAttack();
     }
 
-    private void FixedUpdate()
-    {
-        Move();
-    }
-
-    private void HandleMovementInput()
-    {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-    }
-
-    private void HandleSpriteFlip()
-    {
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = (Vector2)(mouseWorldPos - transform.position);
-
-        spriteRenderer.flipX = direction.x < 0;
-    }
-
-    private void Move()
-    {
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-    }
+ 
 
     private void IncrementAttackTimer()
     {

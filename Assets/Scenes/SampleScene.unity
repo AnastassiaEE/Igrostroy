@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 82768739}
   - component: {fileID: 82768741}
+  - component: {fileID: 82768743}
   - component: {fileID: 82768740}
   - component: {fileID: 82768742}
   m_Layer: 7
@@ -194,8 +195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 678fb0943aa46c244ad1167cf64ebcdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  spriteRenderer: {fileID: 1575451010}
   coneObject: {fileID: 830977331}
   coneRadius: 1.5
   coneAngle: 60
@@ -243,6 +242,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.020761132, y: -0.002076149}
   m_Size: {x: 0.73252845, y: 0.84636545}
   m_Direction: 0
+--- !u!114 &82768743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82768738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49cb28366b367364cb540e6b361ef800, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 4
+  spriteRenderer: {fileID: 1575451010}
 --- !u!1 &111978843
 GameObject:
   m_ObjectHideFlags: 0
