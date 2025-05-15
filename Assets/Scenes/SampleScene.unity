@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 82768739}
   - component: {fileID: 82768741}
   - component: {fileID: 82768743}
+  - component: {fileID: 82768744}
   - component: {fileID: 82768740}
   - component: {fileID: 82768742}
   m_Layer: 7
@@ -195,16 +196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 678fb0943aa46c244ad1167cf64ebcdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coneObject: {fileID: 830977331}
-  coneRadius: 1.5
-  coneAngle: 60
-  coneSegments: 30
-  coneVisibleTime: 0.3
-  waveWidth: 0.8
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  attackDelay: 2
 --- !u!70 &82768742
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -256,6 +247,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 4
   spriteRenderer: {fileID: 1575451010}
+--- !u!114 &82768744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82768738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e103856b094bac45945244b2dbc00bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coneObject: {fileID: 830977331}
+  coneRadius: 2
+  coneAngle: 60
+  coneSegments: 30
+  coneVisibleTime: 0.5
+  waveWidth: 0.5
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  attackDelay: 1
+  gizmos: 1
 --- !u!1 &111978843
 GameObject:
   m_ObjectHideFlags: 0
