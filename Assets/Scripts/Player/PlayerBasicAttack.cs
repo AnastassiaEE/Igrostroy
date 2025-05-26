@@ -16,6 +16,8 @@ public class PlayerBasicAttack : MonoBehaviour
 
     [Header("Attack UI & FX")]
     [SerializeField] private GameObject attackIndicator;
+    [SerializeField] private AudioClip attackSound;
+    private AudioSource audioSource;
 
     [Header("Cone Visualization")]
     [SerializeField] private GameObject coneObject;
@@ -27,11 +29,17 @@ public class PlayerBasicAttack : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool gizmos;
 
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         coneObject.SetActive(false);
-        EnableAttack(true);
+        EnableAttack(true); 
     }
 
     // Update is called once per frame
@@ -58,6 +66,7 @@ public class PlayerBasicAttack : MonoBehaviour
         isAttacking = true;
         ShowCone();
         DetectEnemies();
+        audioSource.PlayOneShot(attackSound);
     }
 
     private void DetectEnemies()
@@ -119,17 +128,17 @@ public class PlayerBasicAttack : MonoBehaviour
         coneObject.transform.rotation = Quaternion.Euler(0, 0, angle);
         coneObject.SetActive(true);
 
-        StartCoroutine(AnimateCone(coneMaterial));
+        StartCoroutine(AnimateCone(coneMaterial, attackDuration));
         StartCoroutine(HideConeAfter(attackDuration));
     }
 
-    private IEnumerator AnimateCone(Material material)
+    private IEnumerator AnimateCone(Material material, float duration)
     {
         float elapsedTime = 0f;
 
-        while (elapsedTime < attackDuration)
+        while (elapsedTime < duration)
         {
-            float radius = Mathf.Lerp(0f, 1f, elapsedTime / attackDuration);
+            float radius = Mathf.Lerp(0f, 1f, elapsedTime / duration);
             material.SetFloat("_WaveRadius", radius);
             elapsedTime += Time.deltaTime;
             yield return null;
