@@ -8,6 +8,7 @@ public class PlayerBasicAttack : MonoBehaviour
     [SerializeField] private float attackDuration = 0.5f;
     [SerializeField] private float attackDelay = 1f;
     [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private int damage;
 
     [Header("Attack State")]
     private float attackTimer;
@@ -82,7 +83,8 @@ public class PlayerBasicAttack : MonoBehaviour
 
             if (angleToEnemy <= coneAngle / 2f)
             {
-                Destroy(enemy.gameObject);
+                Enemy enemyScript = enemy.GetComponent<Enemy>();
+                enemyScript.TakeDamage(damage);
             }
         }
     }
