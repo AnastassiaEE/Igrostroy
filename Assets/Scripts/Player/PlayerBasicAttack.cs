@@ -4,19 +4,25 @@ using UnityEngine;
 
 public class PlayerBasicAttack : MonoBehaviour
 {
+    [Header("Attack Settings")]
+    [SerializeField] private float attackDuration = 0.5f;
+    [SerializeField] private float attackDelay = 1f;
+    [SerializeField] private LayerMask enemyLayer;
 
-    [Header("Attack Cone")]
+    [Header("Attack State")]
+    private float attackTimer;
+    private bool isAttackEnabled;
+    private bool isAttacking;
+
+    [Header("Attack UI & FX")]
+    [SerializeField] private GameObject attackIndicator;
+
+    [Header("Cone Visualization")]
     [SerializeField] private GameObject coneObject;
     [SerializeField] private float coneRadius = 2f;
     [SerializeField, Range(10, 360)] private float coneAngle = 60f;
     [SerializeField, Range(3, 100)] private int coneSegments = 30;
-    [SerializeField] private float coneVisibleTime = 0.5f;
     [SerializeField] private float waveWidth = 0.5f;
-
-    [Header("Attack")]
-    [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private float attackDelay;
-    private float attackTimer;
 
     [Header("Debug")]
     [SerializeField] private bool gizmos;
@@ -25,34 +31,37 @@ public class PlayerBasicAttack : MonoBehaviour
     void Start()
     {
         coneObject.SetActive(false);
+        EnableAttack(true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        IncrementAttackTimer();
         ManageAttack();
-    }
-
-    private void IncrementAttackTimer()
-    {
-        attackTimer += Time.deltaTime;
+        HandleAttackToggle();
     }
 
     private void ManageAttack()
     {
-        if (attackTimer >= Mathf.Max(attackDelay, coneVisibleTime))
+        if (!isAttackEnabled) return;
+        if (isAttacking) return;
+        attackTimer += Time.deltaTime;
+        if (attackTimer >= attackDelay)
         {
             Attack();
             attackTimer = 0f;
         }
     }
 
-
     private void Attack()
     {
+        isAttacking = true;
         ShowCone();
+        DetectEnemies();
+    }
 
+    private void DetectEnemies()
+    {
         Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, coneRadius, enemyLayer);
         if (enemies.Length < 1)
             return;
@@ -69,7 +78,20 @@ public class PlayerBasicAttack : MonoBehaviour
         }
     }
 
+    private void HandleAttackToggle()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            EnableAttack(!isAttackEnabled);
+        }
+    }
 
+    private void EnableAttack(bool isEnabled)
+    {
+        attackIndicator.SetActive(isEnabled);
+        isAttackEnabled = isEnabled;
+        attackTimer = 0;
+    }
 
     private Vector2 GetConeDirection()
     {
@@ -97,18 +119,17 @@ public class PlayerBasicAttack : MonoBehaviour
         coneObject.transform.rotation = Quaternion.Euler(0, 0, angle);
         coneObject.SetActive(true);
 
-        StartCoroutine(AnimateConeWave(coneMaterial));
-        StartCoroutine(HideConeAfterDelay(coneVisibleTime));
+        StartCoroutine(AnimateCone(coneMaterial));
+        StartCoroutine(HideConeAfter(attackDuration));
     }
 
-
-    private IEnumerator AnimateConeWave(Material material)
+    private IEnumerator AnimateCone(Material material)
     {
         float elapsedTime = 0f;
 
-        while (elapsedTime < coneVisibleTime)
+        while (elapsedTime < attackDuration)
         {
-            float radius = Mathf.Lerp(0f, 1f, elapsedTime / coneVisibleTime);
+            float radius = Mathf.Lerp(0f, 1f, elapsedTime / attackDuration);
             material.SetFloat("_WaveRadius", radius);
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -117,18 +138,19 @@ public class PlayerBasicAttack : MonoBehaviour
         material.SetFloat("_WaveRadius", 1f);
     }
 
-    private IEnumerator HideConeAfterDelay(float delay)
+    private IEnumerator HideConeAfter(float delay)
     {
         yield return new WaitForSeconds(delay);
         coneObject.SetActive(false);
+        isAttacking = false;
     }
 
     private Mesh GenerateConeMesh(float angleDeg, float radius, int segments)
     {
-        Mesh mesh = new Mesh();
-        List<Vector3> vertices = new List<Vector3> { Vector3.zero };
-        List<int> triangles = new List<int>();
-        List<Vector2> uvs = new List<Vector2> { new Vector2(0.5f, 0.5f) };
+        Mesh mesh = new();
+        List<Vector3> vertices = new() { Vector3.zero };
+        List<int> triangles = new();
+        List<Vector2> uvs = new() { new Vector2(0.5f, 0.5f) };
 
         float angleRad = Mathf.Deg2Rad * angleDeg;
         float step = angleRad / segments;
@@ -139,7 +161,7 @@ public class PlayerBasicAttack : MonoBehaviour
             Vector3 point = new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0) * radius;
             vertices.Add(point);
 
-            Vector2 uv = new Vector2(point.x / (radius * 2f) + 0.5f, point.y / (radius * 2f) + 0.5f);
+            Vector2 uv = new(point.x / (radius * 2f) + 0.5f, point.y / (radius * 2f) + 0.5f);
             uvs.Add(uv);
 
             if (i > 0)
