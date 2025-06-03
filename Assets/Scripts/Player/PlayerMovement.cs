@@ -1,30 +1,56 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private SpriteRenderer spriteRenderer;
+
+    [Header("Dash")]
+    [SerializeField] private float dashDistance = 10f;
+    [SerializeField] private float dashDuration = 0.2f;
+    private bool isDashing = false;
+    private bool canDash = true;
+    [SerializeField] private float invincibilityDuration = 0.15f;
+    private bool isInvincible = false;
+
+    [Header("Sprites")]
+    [SerializeField] private Sprite normalSprite;
+    [SerializeField] private Sprite dashSprite;
+
+
     private Rigidbody2D rb;
     private Vector2 movement;
 
+
     void Awake() => rb = GetComponent<Rigidbody2D>();
+
+    void Start() {
+        spriteRenderer.sprite = normalSprite;
+    }
+
 
     void Update() {
         HandleMovementInput();
         HandleSpriteFlip();
+        HandleDashInput();
     }
 
-    void FixedUpdate() => Move();
+    void FixedUpdate() {
+        if (!isDashing) Move();
+    }
 
     private void HandleMovementInput()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
     }
+
     private void HandleSpriteFlip()
     {
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = (mouseWorldPos - transform.position);
+        Vector2 direction = mouseWorldPos - transform.position;
         spriteRenderer.flipX = direction.x < 0;
     }
 
@@ -32,4 +58,52 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
+
+    private void HandleDashInput()
+    {
+        if (!isDashing && Input.GetKeyDown(KeyCode.Space))
+        {
+            Vector2 dashDirection = movement == Vector2.zero
+                ? (spriteRenderer.flipX ? Vector2.left : Vector2.right)
+                : movement.normalized;
+
+            StartCoroutine(Dash(dashDirection));
+        }
+    }
+
+    private IEnumerator Dash(Vector2 direction)
+    {
+        isDashing = true;
+
+        StartCoroutine(InvincibilityFrames());
+
+        spriteRenderer.sprite = dashSprite;
+
+        float dashElapsed = 0f;
+
+        Vector2 start = rb.position;
+        Vector2 end = start + direction * dashDistance;
+
+        while (dashElapsed < dashDuration)
+        {
+            float t = Mathf.Clamp01(dashElapsed / dashDuration);
+            rb.MovePosition(Vector2.Lerp(start, end, t));
+            dashElapsed += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        rb.MovePosition(end);
+        isDashing = false;
+
+        spriteRenderer.sprite = normalSprite;
+    }
+
+    private IEnumerator InvincibilityFrames()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(invincibilityDuration);
+        isInvincible = false;
+    }
+
+
 }
