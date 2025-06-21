@@ -2866,6 +2866,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 260302528}
     m_Modifications:
+    - target: {fileID: 872713714103155774, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1861362120500477112, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -2909,6 +2913,10 @@ PrefabInstance:
     - target: {fileID: 7523424740398641360, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8585382704105251829, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
+      propertyPath: damage
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8585382704105251829, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
       propertyPath: player

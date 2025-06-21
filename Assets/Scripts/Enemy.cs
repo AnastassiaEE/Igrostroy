@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -14,7 +15,10 @@ public class Enemy : MonoBehaviour
     private int health;
     [SerializeField] TextMeshPro healthText;
 
-    private void Start()
+    [Header("Attack")]
+    [SerializeField] private int damage;
+
+    void Start()
     {
         health = maxHealth;
         healthText.text = maxHealth.ToString();
@@ -34,8 +38,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        int realDamage = Mathf.Min(damage, health);
-        health -= realDamage;
+        health -= damage;
+        health = Mathf.Clamp(health, 0, maxHealth);
         healthText.text = health.ToString();
         if (health <= 0)
         {
@@ -50,6 +54,14 @@ public class Enemy : MonoBehaviour
 
     private void Attack()
     {
+        player.TakeDamage(damage);
+    }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject == player.gameObject)
+        {
+            Attack();
+        }
     }
 }
