@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player == null) return;
         FollowPlayer();
     }
 
@@ -59,7 +60,8 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject == player.gameObject)
+        if (player == null) return;
+        if (collision.gameObject == player.gameObject && !player.IsInvisible)
         {
             Attack();
         }

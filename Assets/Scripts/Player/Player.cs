@@ -6,10 +6,13 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
     [Header("References")]
+    private PlayerMovement playerMovement;
     private PlayerHealth playerHealth;
+   
 
     private void Awake()
     {
+        playerMovement = GetComponent<PlayerMovement>();
         playerHealth = GetComponent<PlayerHealth>();
     }
 
@@ -22,6 +25,8 @@ public class Player : MonoBehaviour
     {
   
     }
+
+    public bool IsInvisible => playerMovement.IsInvisible;
 
     public void TakeDamage(int damage)
     {

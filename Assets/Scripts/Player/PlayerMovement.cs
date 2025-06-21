@@ -12,8 +12,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashDuration = 0.2f;
     private bool isDashing = false;
     private bool canDash = true;
-    [SerializeField] private float invincibilityDuration = 0.15f;
-    private bool isInvincible = false;
+    [SerializeField] private float invisibilityDuration = 0.15f;
+    private bool isInvisible;
+    public bool IsInvisible
+    {
+        get => isInvisible;         
+        private set                  
+        {
+            isInvisible = value;                           
+        }
+    }
 
     [Header("Sprites")]
     [SerializeField] private Sprite normalSprite;
@@ -75,20 +83,19 @@ public class PlayerMovement : MonoBehaviour
     {
         isDashing = true;
 
-        StartCoroutine(InvincibilityFrames());
+        StartCoroutine(ApplyInvincibility());
 
         spriteRenderer.sprite = dashSprite;
 
-        float dashElapsed = 0f;
+        float startTime = Time.time;
 
         Vector2 start = rb.position;
         Vector2 end = start + direction * dashDistance;
 
-        while (dashElapsed < dashDuration)
+        while (Time.time < startTime + dashDuration)
         {
-            float t = Mathf.Clamp01(dashElapsed / dashDuration);
+            float t = (Time.time - startTime) / dashDuration;
             rb.MovePosition(Vector2.Lerp(start, end, t));
-            dashElapsed += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
 
@@ -98,12 +105,10 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer.sprite = normalSprite;
     }
 
-    private IEnumerator InvincibilityFrames()
+    private IEnumerator ApplyInvincibility()
     {
-        isInvincible = true;
-        yield return new WaitForSeconds(invincibilityDuration);
-        isInvincible = false;
+        IsInvisible = true;
+        yield return new WaitForSeconds(invisibilityDuration);
+        IsInvisible = false;
     }
-
-
 }
