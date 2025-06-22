@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -10,6 +11,10 @@ public class PlayerMovement : MonoBehaviour
     [Header("Dash")]
     [SerializeField] private float dashDistance = 10f;
     [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private int maxDashes = 2;
+    [SerializeField] private TextMeshProUGUI dashesText;
+    private int dashes;
+    
     private bool isDashing = false;
     private bool canDash = true;
     [SerializeField] private float invisibilityDuration = 0.15f;
@@ -36,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Start() {
         spriteRenderer.sprite = normalSprite;
+        dashes = maxDashes;
+        UpdateDashUI();
     }
 
 
@@ -82,6 +89,8 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator Dash(Vector2 direction)
     {
         isDashing = true;
+        dashes--;
+        UpdateDashUI();
 
         StartCoroutine(ApplyInvincibility());
 
@@ -103,6 +112,11 @@ public class PlayerMovement : MonoBehaviour
         isDashing = false;
 
         spriteRenderer.sprite = normalSprite;
+    }
+
+    private void UpdateDashUI()
+    {
+        dashesText.text = $"Dashes: {dashes}";
     }
 
     private IEnumerator ApplyInvincibility()
