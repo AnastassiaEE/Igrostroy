@@ -4,20 +4,27 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement")]
+    [Header("Movement Settings")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    [Header("Dash")]
+    [Header("Dash Settings")]
     [SerializeField] private float dashDistance = 10f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private int maxDashes = 2;
-    [SerializeField] private TextMeshProUGUI dashesText;
-    private int dashes;
-    
-    private bool isDashing = false;
-    private bool canDash = true;
+    [SerializeField] private float dashesResetDelay = 10f; 
     [SerializeField] private float invisibilityDuration = 0.15f;
+
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI dashesText;
+
+    [Header("Sprites")]
+    [SerializeField] private Sprite normalSprite;
+    [SerializeField] private Sprite dashSprite;
+
+    private int dashes;
+    private bool isDashing = false;
+
     private bool isInvisible;
     public bool IsInvisible
     {
@@ -27,11 +34,6 @@ public class PlayerMovement : MonoBehaviour
             isInvisible = value;                           
         }
     }
-
-    [Header("Sprites")]
-    [SerializeField] private Sprite normalSprite;
-    [SerializeField] private Sprite dashSprite;
-
 
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -43,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer.sprite = normalSprite;
         dashes = maxDashes;
         UpdateDashUI();
+        StartCoroutine(ResetDashes());
     }
 
 
@@ -76,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleDashInput()
     {
-        if (!isDashing && Input.GetKeyDown(KeyCode.Space))
+        if (CanDash() && Input.GetKeyDown(KeyCode.Space))
         {
             Vector2 dashDirection = movement == Vector2.zero
                 ? (spriteRenderer.flipX ? Vector2.left : Vector2.right)
@@ -89,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator Dash(Vector2 direction)
     {
         isDashing = true;
-        dashes--;
+        dashes = Mathf.Max(0, dashes - 1);
         UpdateDashUI();
 
         StartCoroutine(ApplyInvincibility());
@@ -114,15 +117,33 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer.sprite = normalSprite;
     }
 
-    private void UpdateDashUI()
-    {
-        dashesText.text = $"Dashes: {dashes}";
-    }
-
     private IEnumerator ApplyInvincibility()
     {
         IsInvisible = true;
         yield return new WaitForSeconds(invisibilityDuration);
         IsInvisible = false;
+    }
+
+    private void UpdateDashUI()
+    {
+        dashesText.text = $"Dashes: {dashes}";
+    }
+
+    private IEnumerator ResetDashes()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(dashesResetDelay);
+            if (dashes < maxDashes)
+            {
+                dashes = maxDashes;
+                UpdateDashUI();
+            }
+        }
+    }
+
+    private bool CanDash()
+    {
+        return !isDashing && dashes > 0;
     }
 }

@@ -252,8 +252,9 @@ MonoBehaviour:
   dashDistance: 3
   dashDuration: 0.3
   maxDashes: 2
-  dashesText: {fileID: 1595855544}
+  dashesResetDelay: 10
   invisibilityDuration: 0.15
+  dashesText: {fileID: 1595855544}
   normalSprite: {fileID: -1725898018, guid: b011d091d38ab2f499a1a067bd29d471, type: 3}
   dashSprite: {fileID: 251630329, guid: b011d091d38ab2f499a1a067bd29d471, type: 3}
 --- !u!114 &82768744
@@ -1455,7 +1456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &260302528
 Transform:
   m_ObjectHideFlags: 0
@@ -1540,10 +1541,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6966002093496063927, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
 --- !u!1 &367991212
 GameObject:
@@ -3207,10 +3205,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6966002093496063927, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd501ba0ee1a7744c808516860ed3cd1, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
