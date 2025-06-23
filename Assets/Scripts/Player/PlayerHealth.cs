@@ -5,11 +5,14 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
 
+    [Header("Health Settings")]
     [SerializeField] private int maxHealth;
-    private int health;
 
+    [Header("UI")]
     [SerializeField] private Slider healthBar;
     [SerializeField] private TextMeshProUGUI healthText;
+
+    private int health;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

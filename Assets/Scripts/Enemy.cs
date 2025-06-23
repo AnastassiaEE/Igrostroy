@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -7,15 +6,17 @@ public class Enemy : MonoBehaviour
     [Header("References")]
     [SerializeField] private Player player;
 
-    [Header("Movement")]
+    [Header("Movement Settings")]
     [SerializeField] private float moveSpeed;
 
-    [Header("Health")]
+    [Header("Health Settings")]
     [SerializeField] private int maxHealth;
     private int health;
+
+    [Header("UI")]
     [SerializeField] TextMeshPro healthText;
 
-    [Header("Attack")]
+    [Header("Attack Settings")]
     [SerializeField] private int damage;
 
     void Start()

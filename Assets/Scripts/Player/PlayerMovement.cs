@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private int maxDashes = 2;
     [SerializeField] private float dashesResetDelay = 10f; 
     [SerializeField] private float invisibilityDuration = 0.15f;
+    private int dashes;
+    private bool isDashing = false;
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI dashesText;
@@ -21,9 +23,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("Sprites")]
     [SerializeField] private Sprite normalSprite;
     [SerializeField] private Sprite dashSprite;
-
-    private int dashes;
-    private bool isDashing = false;
 
     private bool isInvisible;
     public bool IsInvisible
