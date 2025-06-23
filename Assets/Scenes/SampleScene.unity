@@ -255,6 +255,7 @@ MonoBehaviour:
   dashesResetDelay: 10
   invisibilityDuration: 0.15
   dashesText: {fileID: 1595855544}
+  dashSound: {fileID: 8300000, guid: 1e5196ab5e99e494ca5649b8e3f48b92, type: 3}
   normalSprite: {fileID: -1725898018, guid: b011d091d38ab2f499a1a067bd29d471, type: 3}
   dashSprite: {fileID: 251630329, guid: b011d091d38ab2f499a1a067bd29d471, type: 3}
 --- !u!114 &82768744

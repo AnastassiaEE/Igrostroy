@@ -17,8 +17,10 @@ public class PlayerMovement : MonoBehaviour
     private int dashes;
     private bool isDashing = false;
 
-    [Header("UI")]
+    [Header("UI & FX")]
     [SerializeField] private TextMeshProUGUI dashesText;
+    [SerializeField] private AudioClip dashSound;
+    private AudioSource audioSource;
 
     [Header("Sprites")]
     [SerializeField] private Sprite normalSprite;
@@ -38,7 +40,11 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 movement;
 
 
-    void Awake() => rb = GetComponent<Rigidbody2D>();
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void Start() {
         spriteRenderer.sprite = normalSprite;
@@ -93,6 +99,8 @@ public class PlayerMovement : MonoBehaviour
         isDashing = true;
         dashes = Mathf.Max(0, dashes - 1);
         UpdateDashUI();
+
+        audioSource.PlayOneShot(dashSound);
 
         StartCoroutine(ApplyInvincibility());
 
