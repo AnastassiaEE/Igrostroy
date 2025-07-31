@@ -251,8 +251,8 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1575451010}
   dashDistance: 3
   dashDuration: 0.3
-  maxDashes: 2
-  dashesResetDelay: 10
+  maxDashes: 10
+  dashesResetDelay: 5
   invisibilityDuration: 0.15
   dashesText: {fileID: 1595855544}
   dashSound: {fileID: 8300000, guid: 1e5196ab5e99e494ca5649b8e3f48b92, type: 3}
