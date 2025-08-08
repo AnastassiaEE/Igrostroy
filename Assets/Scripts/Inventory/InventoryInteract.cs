@@ -9,12 +9,12 @@ public class InventoryInteract : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        inventoryController.inventory = inventory;
+        inventoryController.selectedInventory = inventory;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        inventoryController.inventory = null;
+        inventoryController.selectedInventory = null;
     }
 
     private void Awake()

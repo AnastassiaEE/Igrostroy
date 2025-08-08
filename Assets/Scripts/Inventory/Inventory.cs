@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -18,6 +18,8 @@ public class Inventory : MonoBehaviour
 
     [SerializeField] GameObject inventoryItemPrefab;
 
+    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,6 +28,13 @@ public class Inventory : MonoBehaviour
 
         InventoryItem inventoryItem = Instantiate(inventoryItemPrefab).GetComponent<InventoryItem>();
         PlaceItem(inventoryItem, 1, 1);
+    }
+
+    public InventoryItem PickUpItem(int x, int y)
+    {
+        InventoryItem toReturn = inventoryItemSlot[x, y];
+        inventoryItemSlot[x, y] = null;
+        return toReturn;
     }
 
     private void Init(int width, int height)
@@ -43,11 +52,12 @@ public class Inventory : MonoBehaviour
 
     public Vector2Int GetTileGridPosition(Vector2 mousePosition)
     {
-        positionOnTheGrid.x = mousePosition.x - rectTransform.position.x;
-        positionOnTheGrid.y = rectTransform.position.y - mousePosition.y;
+        Vector2 localPoint;
 
-        tileGridPosition.x = (int)(positionOnTheGrid.x / (tileSizeWidth));
-        tileGridPosition.y = (int)(positionOnTheGrid.y / (tileSizeHeight));
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, mousePosition, null, out localPoint);
+
+        tileGridPosition.x = (int)(localPoint.x / tileSizeWidth);
+        tileGridPosition.y = (int)(-localPoint.y / tileSizeHeight);
 
         return tileGridPosition;
     }
@@ -64,7 +74,7 @@ public class Inventory : MonoBehaviour
         position.x = posX * tileSizeWidth + tileSizeWidth / 2;
         position.y = -(posY * tileSizeHeight + tileSizeHeight / 2);
 
-        itemRt.anchoredPosition = position; 
+        itemRt.localPosition = position; 
     }
 
 }
