@@ -4,8 +4,8 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
 
-    private float tileSizeWidth = 32;
-    private float tileSizeHeight = 32;
+    public static float tileSizeWidth = 32;
+    public static float tileSizeHeight = 32;
 
     private InventoryItem[,] inventoryItemSlot;
 
@@ -16,18 +16,12 @@ public class Inventory : MonoBehaviour
     [SerializeField] private int inventorySizeWidth;
     [SerializeField] private int inventorySizeHeight;
 
-    [SerializeField] GameObject inventoryItemPrefab;
-
-    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         Init(inventorySizeWidth, inventorySizeHeight);
-
-        InventoryItem inventoryItem = Instantiate(inventoryItemPrefab).GetComponent<InventoryItem>();
-        PlaceItem(inventoryItem, 1, 1);
     }
 
     public InventoryItem PickUpItem(int x, int y)
@@ -71,8 +65,8 @@ public class Inventory : MonoBehaviour
         inventoryItemSlot[posX, posY] = inventoryItem;
 
         Vector2 position;
-        position.x = posX * tileSizeWidth + tileSizeWidth / 2;
-        position.y = -(posY * tileSizeHeight + tileSizeHeight / 2);
+        position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
+        position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
 
         itemRt.localPosition = position; 
     }

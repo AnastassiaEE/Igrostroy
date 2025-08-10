@@ -1620,7 +1620,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventorySizeWidth: 10
   inventorySizeHeight: 10
-  inventoryItemPrefab: {fileID: 8298774093522520853, guid: 3b92fc93942b58c43ab74b0c8c6abe26, type: 3}
 --- !u!114 &477873446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1838,7 +1837,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d97199a13a8a7a4a834a3951a6b8eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedInventory: {fileID: 0}
+  inventory: {fileID: 0}
+  items:
+  - {fileID: 11400000, guid: 655447f892760c84f823c3831c47a901, type: 2}
+  - {fileID: 11400000, guid: 2dd34ee9a201050488ef8176ba3e8544, type: 2}
+  - {fileID: 11400000, guid: 43fdd5c0546e1924a8751913669e8875, type: 2}
+  itemPrefab: {fileID: 8298774093522520853, guid: 3b92fc93942b58c43ab74b0c8c6abe26, type: 3}
+  canvasTransform: {fileID: 809604203}
 --- !u!1 &522314565
 GameObject:
   m_ObjectHideFlags: 0
