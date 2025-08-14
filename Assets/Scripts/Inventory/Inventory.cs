@@ -27,7 +27,16 @@ public class Inventory : MonoBehaviour
     public InventoryItem PickUpItem(int x, int y)
     {
         InventoryItem toReturn = inventoryItemSlot[x, y];
-        inventoryItemSlot[x, y] = null;
+
+        if (toReturn == null) { return null; }
+
+        for (int ix = 0; ix < toReturn.itemData.width; ix++)
+        {
+            for (int iy = 0; iy < toReturn.itemData.height; iy++)
+            {
+                inventoryItemSlot[toReturn.onGridPositionX + ix, toReturn.onGridPositionY + iy] = null;
+            }
+        }
         return toReturn;
     }
 
@@ -56,19 +65,48 @@ public class Inventory : MonoBehaviour
         return tileGridPosition;
     }
 
-    public void PlaceItem(InventoryItem inventoryItem, int posX, int posY)
+    public bool PlaceItem(InventoryItem inventoryItem, int posX, int posY)
     {
+        if (!CheckBoundries(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height)) return false;
+
         RectTransform itemRt = inventoryItem.GetComponent<RectTransform>();
         itemRt.SetParent(this.rectTransform, false); 
-        itemRt.localScale = Vector3.one;
+        
+        for (int x = 0; x < inventoryItem.itemData.width; x++)
+        {
+            for (int y = 0; y < inventoryItem.itemData.height; y++)
+            {
+                inventoryItemSlot[posX + x, posY + y] = inventoryItem;
+            }
+        }
 
-        inventoryItemSlot[posX, posY] = inventoryItem;
+        inventoryItem.onGridPositionX = posX;
+        inventoryItem.onGridPositionY = posY;
 
         Vector2 position;
         position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
         position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
 
-        itemRt.localPosition = position; 
+        itemRt.localPosition = position;
+
+        return true;
     }
 
+    private bool CheckPosition(int posX, int posY)
+    {
+        if (posX < 0 || posY < 0) return false;
+        if (posX >= inventorySizeWidth || posY >= inventorySizeHeight) return false;
+        return true;
+    }
+
+    private bool CheckBoundries(int posX, int posY, int width, int height)
+    {
+        int rightX = posX + width - 1;
+        int bottomY = posY + height - 1;
+
+        if (!CheckPosition(posX, posY)) return false;
+        if (!CheckPosition(rightX, bottomY)) return false;
+
+        return true;
+    }
 }
