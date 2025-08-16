@@ -9,7 +9,8 @@ public class InventoryController : MonoBehaviour
     public Inventory inventory;
 
     private InventoryItem selectedItem;
-    private RectTransform rectTransform;
+    private InventoryItem existingItem;
+    private RectTransform selectedItemRectTransform;
 
     [SerializeField] private List<InventoryItemData> items;
     [SerializeField] private GameObject itemPrefab;
@@ -44,8 +45,8 @@ public class InventoryController : MonoBehaviour
         InventoryItem inventoryItem = Instantiate(itemPrefab, canvasTransform, false).GetComponent<InventoryItem>();
         selectedItem = inventoryItem;
 
-        rectTransform = inventoryItem.GetComponent<RectTransform>();
-        rectTransform.SetParent(canvasTransform);
+        selectedItemRectTransform = inventoryItem.GetComponent<RectTransform>();
+        selectedItemRectTransform.SetParent(canvasTransform);
 
         int selectedItemId = UnityEngine.Random.Range(0, items.Count);
         inventoryItem.Set(items[selectedItemId]);
@@ -53,29 +54,48 @@ public class InventoryController : MonoBehaviour
 
     private void InteractWithItem()
     {
-        Vector2Int tileGridPosition = inventory.GetTileGridPosition(Input.mousePosition);
+
+        Vector2 position = Input.mousePosition;
+
+        if (selectedItem != null)
+        {
+            position.x -= (selectedItem.itemData.width - 1) * Inventory.cellWidth / 2;
+            position.y += (selectedItem.itemData.height - 1) * Inventory.cellHeight / 2;
+        }
+
+        Vector2Int cellCoords = inventory.GetCellCoords(position);
+
         if (selectedItem == null)
         {
-            PickUpItem(tileGridPosition);
+            PickUpItem(cellCoords);
         }
         else
         {
-            PlaceItem(tileGridPosition);
+            PlaceItem(cellCoords);
         }
     }
 
-    private void PlaceItem(Vector2Int tileGridPosition)
+    private void PlaceItem(Vector2Int cellCoords)
     {
-        bool placed = inventory.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y);
-        if (placed) selectedItem = null;
+        bool placed = inventory.PlaceItem(selectedItem, cellCoords.x, cellCoords.y, ref existingItem);
+        if (placed)
+        {
+            selectedItem = null;
+            if (existingItem != null)
+            {
+                selectedItem = existingItem;
+                existingItem = null;
+                selectedItemRectTransform = selectedItem.GetComponent<RectTransform>();
+            }
+        }
     }
 
-    private void PickUpItem(Vector2Int tileGridPosition)
+    private void PickUpItem(Vector2Int cellCoords)
     {
-        selectedItem = inventory.PickUpItem(tileGridPosition.x, tileGridPosition.y);
+        selectedItem = inventory.PickUpItem(cellCoords.x, cellCoords.y);
         if (selectedItem != null)
         {
-            rectTransform = selectedItem.GetComponent<RectTransform>();
+            selectedItemRectTransform = selectedItem.GetComponent<RectTransform>();
         }
     }
 
@@ -83,7 +103,7 @@ public class InventoryController : MonoBehaviour
     {
         if (selectedItem != null)
         {
-            rectTransform.position = Input.mousePosition;
+            selectedItemRectTransform.position = Input.mousePosition;
         }
     }
 }

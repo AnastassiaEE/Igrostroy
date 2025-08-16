@@ -6,9 +6,7 @@ using UnityEngine.UI;
 public class InventoryItem : MonoBehaviour
 {
     public InventoryItemData itemData;
-
-    public int onGridPositionX;
-    public int onGridPositionY;
+    public Vector2Int gridPosition;
 
     internal void Set(InventoryItemData inventoryItemData)
     {
@@ -16,8 +14,8 @@ public class InventoryItem : MonoBehaviour
         GetComponent<Image>().sprite = itemData.itemIcon;
 
         Vector2 size = new Vector2();
-        size.x = itemData.width * Inventory.tileSizeWidth;
-        size.y = itemData.height * Inventory.tileSizeHeight;
+        size.x = itemData.width * Inventory.cellWidth;
+        size.y = itemData.height * Inventory.cellHeight;
         GetComponent<RectTransform>().sizeDelta = size;
     }
 
