@@ -4,6 +4,11 @@ public class InventoryHighlight : MonoBehaviour
 {
     [SerializeField] RectTransform highlighter;
 
+    public void Show(bool b)
+    {
+        highlighter.gameObject.SetActive(b);
+    }
+
     public void SetSize(InventoryItem targetItem)
     {
         Vector2 size = new Vector2();
@@ -14,8 +19,6 @@ public class InventoryHighlight : MonoBehaviour
 
     public void SetPosition(Inventory targetInventory, InventoryItem targetItem)
     {
-        highlighter.SetParent(targetInventory.GetComponent<RectTransform>());
-
         Vector2 position = targetInventory.GetItemLocalPosition(
             targetItem,
             targetItem.gridPosition.x,
@@ -23,5 +26,23 @@ public class InventoryHighlight : MonoBehaviour
             );
 
         highlighter.localPosition = position;
+    }
+
+    public void SetPosition(Inventory targetInventory, InventoryItem targetItem, int posX, int posY)
+    {
+        Vector2 position = targetInventory.GetItemLocalPosition(
+            targetItem,
+            posX, 
+            posY
+            );
+
+        highlighter.localPosition = position;
+    }
+
+
+    public void SetParent(Inventory targetInventory)
+    {
+        if (targetInventory == null) return;
+        highlighter.SetParent(targetInventory.GetComponent<RectTransform>());
     }
 }

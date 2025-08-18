@@ -6,24 +6,38 @@ using UnityEngine;
 public class InventoryController : MonoBehaviour
 {
     [HideInInspector]
-    public Inventory inventory;
+    private Inventory hoveredInventory;
+
+    public Inventory HoveredInventory { 
+        get => hoveredInventory; 
+        set {
+            hoveredInventory = value;
+            highlight.SetParent(value);
+        }
+    }
 
     private InventoryItem selectedItem;
     private InventoryItem existingItem;
+    private InventoryItem itemToHighlight;
     private RectTransform selectedItemRectTransform;
+    private InventoryHighlight highlight;
+    private Vector2Int oldCellCoords;
 
     [SerializeField] private List<InventoryItemData> items;
     [SerializeField] private GameObject itemPrefab;
     [SerializeField] private Transform canvasTransform;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    
+
+    
+
+    private void Awake()
     {
-        
+        highlight = GetComponent<InventoryHighlight>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         DragItem();
 
@@ -32,11 +46,52 @@ public class InventoryController : MonoBehaviour
             CreateRandomItem();
         }
 
-        if (inventory == null) return;
+        if (hoveredInventory == null)
+        {
+            highlight.Show(false);
+            return;
+        }
+
+        HandleHighlight();
 
         if (Input.GetMouseButtonDown(0))
         {
             InteractWithItem();
+        }
+    }
+
+    private void HandleHighlight()
+    {
+        Vector2Int cellCoords = GetCellCoords();
+
+        if (oldCellCoords == cellCoords) return;
+
+        oldCellCoords = cellCoords;
+
+        if (selectedItem == null)
+        {
+            itemToHighlight = hoveredInventory.GetItem(cellCoords.x, cellCoords.y);
+
+            if (itemToHighlight != null)
+            {    
+                highlight.Show(true);  
+                highlight.SetSize(itemToHighlight);
+                highlight.SetPosition(hoveredInventory, itemToHighlight);
+            }
+            else
+            {
+                highlight.Show(false);
+            }
+        } else
+        {
+            highlight.Show(hoveredInventory.IsWithinBounds(
+                cellCoords.x,
+                cellCoords.y,
+                selectedItem.itemData.width,
+                selectedItem.itemData.height
+                ));
+            highlight.SetSize(selectedItem);
+            highlight.SetPosition(hoveredInventory, selectedItem, cellCoords.x, cellCoords.y);
         }
     }
 
@@ -54,16 +109,7 @@ public class InventoryController : MonoBehaviour
 
     private void InteractWithItem()
     {
-
-        Vector2 position = Input.mousePosition;
-
-        if (selectedItem != null)
-        {
-            position.x -= (selectedItem.itemData.width - 1) * Inventory.cellWidth / 2;
-            position.y += (selectedItem.itemData.height - 1) * Inventory.cellHeight / 2;
-        }
-
-        Vector2Int cellCoords = inventory.GetCellCoords(position);
+        Vector2Int cellCoords = GetCellCoords();
 
         if (selectedItem == null)
         {
@@ -75,9 +121,23 @@ public class InventoryController : MonoBehaviour
         }
     }
 
+    private Vector2Int GetCellCoords()
+    {
+        Vector2 position = Input.mousePosition;
+
+        if (selectedItem != null)
+        {
+            position.x -= (selectedItem.itemData.width - 1) * Inventory.cellWidth / 2;
+            position.y += (selectedItem.itemData.height - 1) * Inventory.cellHeight / 2;
+        }
+
+        Vector2Int cellCoords = hoveredInventory.GetCellCoords(position);
+        return cellCoords;
+    }
+
     private void PlaceItem(Vector2Int cellCoords)
     {
-        bool placed = inventory.PlaceItem(selectedItem, cellCoords.x, cellCoords.y, ref existingItem);
+        bool placed = hoveredInventory.PlaceItem(selectedItem, cellCoords.x, cellCoords.y, ref existingItem);
         if (placed)
         {
             selectedItem = null;
@@ -92,7 +152,7 @@ public class InventoryController : MonoBehaviour
 
     private void PickUpItem(Vector2Int cellCoords)
     {
-        selectedItem = inventory.PickUpItem(cellCoords.x, cellCoords.y);
+        selectedItem = hoveredInventory.PickUpItem(cellCoords.x, cellCoords.y);
         if (selectedItem != null)
         {
             selectedItemRectTransform = selectedItem.GetComponent<RectTransform>();

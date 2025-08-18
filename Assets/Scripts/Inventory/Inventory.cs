@@ -136,7 +136,7 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
-    private bool IsWithinBounds(int posX, int posY, int width, int height)
+    public bool IsWithinBounds(int posX, int posY, int width, int height)
     {
         int rightX = posX + width - 1;
         int bottomY = posY + height - 1;
@@ -145,5 +145,10 @@ public class Inventory : MonoBehaviour
         if (!IsWithinGrid(rightX, bottomY)) return false;
 
         return true;
+    }
+
+    internal InventoryItem GetItem(int x, int y)
+    {
+        return itemGrid[x, y];
     }
 }

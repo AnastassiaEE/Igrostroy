@@ -1635,7 +1635,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 1, y: 1, z: 1, w: 1}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1838,7 +1838,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d97199a13a8a7a4a834a3951a6b8eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: {fileID: 0}
   items:
   - {fileID: 11400000, guid: 655447f892760c84f823c3831c47a901, type: 2}
   - {fileID: 11400000, guid: 2dd34ee9a201050488ef8176ba3e8544, type: 2}
@@ -1857,7 +1856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e10b993f30030447a06048cf167bfe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlighter: {fileID: 0}
+  highlighter: {fileID: 822772804}
 --- !u!1 &522314565
 GameObject:
   m_ObjectHideFlags: 0
