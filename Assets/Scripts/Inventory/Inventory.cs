@@ -78,6 +78,13 @@ public class Inventory : MonoBehaviour
             ClearItemFromGrid(existingItem);
         }
 
+        PlaceItem(itemToPlace, posX, posY);
+
+        return true;
+    }
+
+    public void PlaceItem(InventoryItem itemToPlace, int posX, int posY)
+    {
         RectTransform itemRectTransform = itemToPlace.GetComponent<RectTransform>();
         itemRectTransform.SetParent(this.rectTransform, false);
 
@@ -94,8 +101,6 @@ public class Inventory : MonoBehaviour
         Vector2 itemPosition = GetItemLocalPosition(itemToPlace, posX, posY);
 
         itemRectTransform.localPosition = itemPosition;
-
-        return true;
     }
 
     public Vector2 GetItemLocalPosition(InventoryItem itemToPlace, int posX, int posY)
@@ -129,6 +134,22 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
+    private bool HasAvailableSpace(int posX, int posY, int width, int height)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (itemGrid[posX + x, posY + y] != null)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
     private bool IsWithinGrid(int posX, int posY)
     {
         if (posX < 0 || posY < 0) return false;
@@ -150,5 +171,23 @@ public class Inventory : MonoBehaviour
     internal InventoryItem GetItem(int x, int y)
     {
         return itemGrid[x, y];
+    }
+
+    public Vector2Int? FindSpaceForItem(InventoryItem itemToInsert)
+    {
+        int height = gridHeight - itemToInsert.itemData.height + 1;
+        int width = gridWidth - itemToInsert.itemData.width + 1;
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (HasAvailableSpace(x, y, itemToInsert.itemData.width, itemToInsert.itemData.height))
+                {
+                    return new Vector2Int(x, y);
+                }
+            }
+        }
+        return null;
     }
 }

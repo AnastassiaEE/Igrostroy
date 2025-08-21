@@ -46,6 +46,11 @@ public class InventoryController : MonoBehaviour
             CreateRandomItem();
         }
 
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            InsertRandomItem();
+        }
+
         if (hoveredInventory == null)
         {
             highlight.Show(false);
@@ -58,6 +63,23 @@ public class InventoryController : MonoBehaviour
         {
             InteractWithItem();
         }
+    }
+
+    private void InsertRandomItem()
+    {
+        if (hoveredInventory == null) return;
+        CreateRandomItem();
+        InventoryItem itemToInsert = selectedItem;
+        selectedItem = null;
+        InsertItem(itemToInsert);
+    }
+
+    private void InsertItem(InventoryItem itemToInsert)
+    {
+        Vector2Int? cellCoords = hoveredInventory.FindSpaceForItem(itemToInsert);
+        if (cellCoords == null) return;
+
+        hoveredInventory.PlaceItem(itemToInsert, cellCoords.Value.x, cellCoords.Value.y);
     }
 
     private void HandleHighlight()
